@@ -1,0 +1,3 @@
+order_id,ordered_at,customer_name,item_id,status,cancelled_at
+DEMO-001,2026-08-01 14:00:00,王小明,A001,active,
+DEMO-002,2026-08-01 14:02:00,陳小華,A005,active,

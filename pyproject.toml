@@ -1,0 +1,11 @@
+[project]
+name = "workshop6-sheet-to-db"
+version = "0.1.0"
+description = "Workshop 6: use natural language to migrate a drink ordering demo from Google Sheets to SQL Server"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.3",
+    "google-auth>=2.56.2",
+    "gspread>=6.2.1",
+    "tzdata>=2026.3",
+]

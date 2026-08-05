@@ -1,0 +1,6 @@
+item_id,item_name,total_stock,remaining_stock,emoji,description
+A001,四季春茶,10,10,tea,清爽回甘的招牌茶底
+A002,經典紅茶,8,8,tea,香氣濃郁的經典紅茶
+A003,三寶奶茶,6,6,drink,三種配料的練習品項
+A004,波霸奶茶,5,5,drink,大顆波霸更有口感
+A005,珍珠奶茶,7,7,drink,珍珠搭配奶茶

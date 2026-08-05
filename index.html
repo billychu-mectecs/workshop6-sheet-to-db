@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>50嵐 線上訂購（限量版）</title>
+<style>
+  :root {
+    --brand: #e8590c;
+    --brand-dark: #c2410c;
+    --brand-light: #fff4ec;
+    --bg: #faf6f1;
+    --card: #ffffff;
+    --text: #2b2018;
+    --muted: #8a7b6c;
+    --border: #ecdfd2;
+    --shadow: 0 2px 10px rgba(140, 90, 40, 0.08);
+    --stock-ok: #2f9e44;
+    --stock-low: #e8590c;
+    --stock-out: #adb5bd;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Microsoft JhengHei", "PingFang TC", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    color: #fff;
+    padding: 28px 20px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+  }
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+  section.panel {
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  section.panel > h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .drink-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    background: var(--brand-light);
+  }
+  .drink-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(200, 100, 30, 0.15);
+  }
+  .drink-card.sold-out {
+    opacity: 0.55;
+  }
+  .drink-emoji {
+    font-size: 34px;
+  }
+  .drink-name {
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .drink-desc {
+    font-size: 12px;
+    color: var(--muted);
+    min-height: 32px;
+  }
+  .stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    width: fit-content;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--border);
+  }
+  .stock-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--stock-ok);
+  }
+  .stock-badge.low .dot { background: var(--stock-low); }
+  .stock-badge.out .dot { background: var(--stock-out); }
+  .stock-badge.low { color: var(--stock-low); }
+  .stock-badge.out { color: var(--stock-out); }
+  .buy-btn {
+    margin-top: 4px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .buy-btn:hover { background: var(--brand-dark); }
+  .buy-btn:disabled {
+    background: var(--stock-out);
+    cursor: not-allowed;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { color: var(--muted); font-weight: 600; }
+  td.qty { font-weight: 700; color: var(--brand-dark); }
+  .empty-hint {
+    color: var(--muted);
+    font-size: 14px;
+    padding: 12px 0;
+  }
+  .order-log {
+    max-height: 220px;
+    overflow-y: auto;
+    margin-top: 12px;
+  }
+  .order-log-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 4px;
+    border-bottom: 1px dashed var(--border);
+    color: var(--muted);
+  }
+  .order-log-item span.name { color: var(--text); font-weight: 600; }
+  .order-log-item .delete-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 0 4px;
+  }
+  .order-log-item .delete-btn:hover { color: #d92626; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 20, 10, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 360px;
+    padding: 22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  }
+  .modal-box h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+  }
+  .modal-box .modal-item {
+    color: var(--brand-dark);
+    font-weight: 700;
+  }
+  .modal-box .modal-stock {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .modal-box label {
+    font-size: 13px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .modal-box input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .modal-box input[type="text"]:focus {
+    outline: none;
+    border-color: var(--brand);
+  }
+  .field-error {
+    color: #d92626;
+    font-size: 12px;
+    min-height: 16px;
+    margin-bottom: 10px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .modal-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    background: #f1ece5;
+    color: var(--text);
+  }
+  .btn-confirm {
+    background: var(--brand);
+    color: #fff;
+  }
+  .btn-confirm:hover { background: var(--brand-dark); }
+
+  .modal-loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0 8px;
+  }
+  .modal-loading.show { display: flex; }
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--border);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  .modal-loading p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #2b2018;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    z-index: 200;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: auto;
+  }
+  .reset-btn:hover { color: var(--brand-dark); border-color: var(--brand); }
+  .panel-header-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .panel-header-row h2 { margin: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>50嵐 線上訂購</h1>
+  <p>每項限量 6 杯，售完為止</p>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>🧋 熱門飲料</h2>
+    <div class="menu-grid" id="menuGrid"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header-row">
+      <h2>📋 訂單列表（各品項庫存狀態）</h2>
+      <button class="reset-btn" id="resetBtn">清空訂單並補滿庫存</button>
+    </div>
+    <table id="summaryTable">
+      <thead>
+        <tr><th>品項</th><th>已訂購 / 總庫存</th></tr>
+      </thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+    <div class="empty-hint" id="emptyHint">目前尚無訂單，快去選購飲料吧！</div>
+
+    <div class="order-log" id="orderLog"></div>
+  </section>
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3>確認訂購</h3>
+    <div class="modal-item" id="modalItemName"></div>
+    <div class="modal-stock" id="modalItemStock"></div>
+    <label for="nameInput">請輸入您的姓名</label>
+    <input type="text" id="nameInput" placeholder="例如：王小明" maxlength="20">
+    <div class="field-error" id="nameError"></div>
+    <div class="modal-actions" id="modalActions">
+      <button class="btn-cancel" id="cancelBtn">取消</button>
+      <button class="btn-confirm" id="confirmBtn">送出訂單</button>
+    </div>
+    <div class="modal-loading" id="modalLoading">
+      <div class="spinner"></div>
+      <p>訂單確認中，正在為您確認庫存，請稍候...</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let menu = [];
+  let orders = [];
+  let selectedDrink = null;
+  let isSubmitting = false;
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
+
+  async function fetchMenu() {
+    const res = await fetch("/api/menu");
+    menu = await res.json();
+  }
+
+  async function fetchOrders() {
+    const res = await fetch("/api/orders");
+    orders = await res.json();
+  }
+
+  async function refreshAll() {
+    await Promise.all([fetchMenu(), fetchOrders()]);
+    renderMenu();
+    renderOrders();
+  }
+
+  function renderMenu() {
+    const grid = document.getElementById("menuGrid");
+    grid.innerHTML = menu.map(d => {
+      const soldOut = d.remaining <= 0;
+      const badgeClass = soldOut ? "out" : (d.remaining <= 2 ? "low" : "");
+      return `
+      <div class="drink-card ${soldOut ? "sold-out" : ""}" data-card-id="${escapeHtml(d.id)}">
+        <div class="drink-emoji">${escapeHtml(d.emoji)}</div>
+        <div class="drink-name">${escapeHtml(d.name)}</div>
+        <div class="drink-desc">${escapeHtml(d.desc)}</div>
+        <div class="stock-badge ${badgeClass}" id="stock-${escapeHtml(d.id)}">
+          <span class="dot"></span>
+          <span class="stock-text">${escapeHtml(d.remaining)}/${escapeHtml(d.total)}</span>
+        </div>
+        <button class="buy-btn" data-id="${escapeHtml(d.id)}" ${soldOut ? "disabled" : ""}>
+          ${soldOut ? "已售完" : "直接購買"}
+        </button>
+      </div>
+    `;
+    }).join("");
+
+    grid.querySelectorAll(".buy-btn:not([disabled])").forEach(btn => {
+      btn.addEventListener("click", () => openModal(btn.dataset.id));
+    });
+  }
+
+  function openModal(drinkId) {
+    const item = menu.find(m => m.id === drinkId);
+    if (!item || item.remaining <= 0) return;
+    selectedDrink = item;
+    document.getElementById("modalItemName").textContent = item.name;
+    document.getElementById("modalItemStock").textContent =
+      `剩餘庫存 ${item.remaining}/${item.total}`;
+    document.getElementById("nameInput").value = "";
+    document.getElementById("nameError").textContent = "";
+    setSubmitting(false);
+    document.getElementById("modalOverlay").classList.add("open");
+    setTimeout(() => document.getElementById("nameInput").focus(), 50);
+  }
+
+  function closeModal() {
+    if (isSubmitting) return;
+    document.getElementById("modalOverlay").classList.remove("open");
+    selectedDrink = null;
+  }
+
+  function setSubmitting(submitting) {
+    isSubmitting = submitting;
+    document.getElementById("modalActions").style.display = submitting ? "none" : "flex";
+    document.getElementById("nameInput").style.display = submitting ? "none" : "block";
+    document.getElementById("modalLoading").classList.toggle("show", submitting);
+  }
+
+  async function confirmOrder() {
+    const nameInput = document.getElementById("nameInput");
+    const name = nameInput.value.trim();
+    const errorEl = document.getElementById("nameError");
+    if (!name) {
+      errorEl.textContent = "請輸入姓名才能送出訂單";
+      return;
+    }
+    if (!selectedDrink) return;
+
+    errorEl.textContent = "";
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, itemId: selectedDrink.id })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error || "訂購失敗，請稍後再試";
+        return;
+      }
+      menu = data.menu;
+      orders = data.orders;
+      renderMenu();
+      renderOrders();
+      const updated = menu.find(m => m.id === selectedDrink.id);
+      showToast(`${name} 已成功訂購「${updated.name}」！剩餘 ${updated.remaining}/${updated.total}`);
+      closeModal();
+    } catch (e) {
+      errorEl.textContent = "連線失敗，請確認後端伺服器是否啟動，或稍後再試一次";
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function renderOrders() {
+    const summaryBody = document.getElementById("summaryBody");
+    const emptyHint = document.getElementById("emptyHint");
+    const table = document.getElementById("summaryTable");
+    const log = document.getElementById("orderLog");
+
+    if (orders.length === 0) {
+      table.style.display = "none";
+      emptyHint.style.display = "block";
+      log.innerHTML = "";
+      return;
+    }
+
+    table.style.display = "table";
+    emptyHint.style.display = "none";
+
+    summaryBody.innerHTML = menu.map(d => {
+      if (d.sold === 0) return "";
+      return `<tr><td>${escapeHtml(d.name)}</td><td class="qty">${escapeHtml(d.sold)}/${escapeHtml(d.total)}</td></tr>`;
+    }).join("");
+
+    log.innerHTML = orders.map(o => `
+      <div class="order-log-item">
+        <span><span class="name">${escapeHtml(o.name)}</span> 訂購了 ${escapeHtml(o.itemName)}</span>
+        <span>${escapeHtml(o.time)}</span>
+        <button class="delete-btn" data-row="${escapeHtml(o.row)}" title="刪除這筆紀錄">✕</button>
+      </div>
+    `).join("");
+
+    log.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", () => deleteOrder(btn.dataset.row));
+    });
+  }
+
+  async function deleteOrder(row) {
+    if (!confirm("確定要刪除這筆訂單紀錄嗎？")) return;
+    const res = await fetch(`/api/orders/${row}`, { method: "DELETE" });
+    const data = await res.json();
+    if (res.ok) {
+      menu = data.menu;
+      orders = data.orders;
+      renderMenu();
+      renderOrders();
+      showToast("已刪除該筆紀錄");
+    }
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove("show"), 2400);
+  }
+
+  document.getElementById("cancelBtn").addEventListener("click", closeModal);
+  document.getElementById("confirmBtn").addEventListener("click", confirmOrder);
+  document.getElementById("modalOverlay").addEventListener("click", (e) => {
+    if (e.target.id === "modalOverlay") closeModal();
+  });
+  document.getElementById("nameInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") confirmOrder();
+  });
+  document.getElementById("resetBtn").addEventListener("click", async () => {
+    if (confirm("確定要清空所有訂單並補滿庫存嗎？")) {
+      const res = await fetch("/api/reset", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        menu = data.menu;
+        orders = data.orders;
+        renderMenu();
+        renderOrders();
+      }
+    }
+  });
+
+  refreshAll();
+</script>
+
+</body>
+</html>
