@@ -29,6 +29,7 @@ https://github.com/billychu-mectecs/workshop6-sheet-to-db
 我目前開啟的資料夾是上週完成的作品，這才是要修改的目標。請先確認目前位置與主要檔案；若不像一個現有專案，請停止並提醒我選對資料夾。
 
 請把官方 Repo 下載到另外的暫存參考位置，讀完 README.md、CLAUDE.md 與 prompts/sheet-to-db.md。不要執行官方 Repo，不要用範例檔案覆蓋我的作品，也不要改動暫存參考資料。
+讀完後，第一題只問我：「你是哪個部門？」我的回答只用來確認，不可拿來決定或擴大資料庫權限。
 先不要執行或修改。先用繁體中文告訴我：
 1. 我的作品位置與官方參考 Repo 位置
 2. 我的作品目前資料怎麼流動
@@ -66,6 +67,7 @@ AI 會先把官方規則與你的作品互相比對，再陪你把自己作品�
 - `prompts/sheet-to-db.md`：完整的 Sheet 轉資料庫任務
 - `docs/current-system.md`：目前作品的白話說明
 - `docs/data-dictionary.md`：資料欄位與規則
+- `docs/connection-flow.md`：AI 使用的安全連線流程
 - `sample-data/`：可公開使用的假資料
 - `migrations/`：AI 之後放資料庫改造紀錄的位置
 
