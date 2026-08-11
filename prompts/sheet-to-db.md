@@ -14,7 +14,7 @@
 開始前：
 1. 分別確認我的既有專案與課堂參考專案的位置；真正修改的只能是我的既有專案。
 2. 先讀懂我的整個專案，不要先執行或修改，也不要用課堂範例覆蓋我的檔案。
-3. 第一題只問我：「你是哪個部門？」回答只用來確認，真正權限仍以個人 SQL Login 與資料庫授權為準。
+3. 不要詢問我的部門或工號。資料庫範圍只以 DB helper 提供的個人 SQL Login、`MEDTECS_DB_DATABASE` 與 `MEDTECS_DB_SCHEMA` 為準；不要用口頭回答決定或擴大權限。
 4. 依 docs/connection-flow.md 確認 `%LOCALAPPDATA%\Medtecs\DbAccess\Invoke-WithDbAccess.ps1` 已安裝。不要直接讀取或解密 `credential.bin`，不要問我主機、帳號、密碼或 connection string。
 5. 用白話告訴我目前資料從畫面到 Google Sheet 的流程。
 6. 比對課堂範例後，列出我的作品中哪些 Sheet、欄位與功能會搬到資料庫，以及哪些既有修改會保留。
