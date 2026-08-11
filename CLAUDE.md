@@ -25,15 +25,24 @@
 - 不執行來源不明的安裝腳本、PowerShell 管線或遠端下載指令。
 - 不讀取、顯示、複製或提交秘密值；只確認必要環境變數是否存在。
 - 不把 `.env`、憑證、真實資料、公司內部位址或完整連線字串放進 Git。
-- 資料庫只使用以下環境變數，不自行發明帳密：
-  - `WORKSHOP6_SQL_SERVER`
-  - `WORKSHOP6_SQL_DATABASE`
-  - `WORKSHOP6_SQL_SCHEMA`
-  - `WORKSHOP6_SQL_AUTH`
-- 預期使用 Windows 登入身分連線。若設定缺少、資料庫範圍不明或權限不符，停止並用白話說明，不嘗試別人的資料庫。
+- DB 安裝位置固定為 `%LOCALAPPDATA%\Medtecs\DbAccess`。只確認下列檔案存在，不直接讀取或解密 `credential.bin`：
+  - `config.json`
+  - `credential.bin`
+  - `Invoke-WithDbAccess.ps1`
+- 需要連線資料庫時，只能透過 `Invoke-WithDbAccess.ps1` 啟動子程序；helper 會在子程序內短暫提供以下環境變數：
+  - `MEDTECS_DB_SERVER`
+  - `MEDTECS_DB_DATABASE`
+  - `MEDTECS_DB_SCHEMA`
+  - `MEDTECS_DB_AUTH`
+  - `MEDTECS_DB_USER`
+  - `MEDTECS_DB_PASSWORD`
+  - `MEDTECS_DB_ENCRYPT`
+  - `MEDTECS_DB_TRUST_SERVER_CERTIFICATE`
+- 預期使用個人 SQL Login；帳密由 helper 在子程序內短暫載入。若檔案缺少、資料庫範圍不明或權限不符，停止並用白話說明，不嘗試別人的資料庫。
 - 檢查環境變數時只回報「完整、缺少或與部門不一致」，不要顯示實際主機、資料庫或完整連線字串。
-- 學員口頭回答的部門若與 `WORKSHOP6_SQL_DATABASE` 所代表的部門不一致，停止並請講師確認；不要修改環境變數繞過。
+- 學員口頭回答的部門若與 `MEDTECS_DB_DATABASE` 所代表的部門不一致，停止並請講師確認；不要修改環境變數繞過。
 - 依 `docs/connection-flow.md` 完成連線前檢查，成功後只告訴學員「已連到你的部門練習資料庫」。
+- 不要求學員用 DB Batch 開啟 Claude；學員應照平常方式在自己的作品資料夾開啟 Claude。
 - 公開 GitHub 只能使用 `sample-data/` 內的假資料。
 
 ## 改造原則
@@ -42,7 +51,7 @@
 - 先盤點畫面、API、Sheet 欄位與操作流程，再提出搬遷計畫。
 - 以學員作品為準，維持它現有的畫面、文字、功能與 API 行為，除非學員確認要改。
 - 為資料庫建立可重複執行的 migration，並留下白話資料字典。
-- 每位學員使用自己的 `WORKSHOP6_SQL_SCHEMA`，資料表名稱不可加上帳號密碼。
+- 每位學員使用自己的 `MEDTECS_DB_SCHEMA`，資料表必須建立在該 schema；不可改用 `dbo` 或其他人的 schema。
 - 訂購時「確認庫存、扣庫存、新增訂單」必須放在同一個 transaction。
 - 訂單使用穩定的唯一編號，不依賴 Sheet 列號。
 - 取消訂單優先保留紀錄並標記取消；大量刪除、重設資料前必須再次確認。
