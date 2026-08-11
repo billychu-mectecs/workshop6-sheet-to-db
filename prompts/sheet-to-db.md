@@ -14,8 +14,8 @@
 開始前：
 1. 分別確認我的既有專案與課堂參考專案的位置；真正修改的只能是我的既有專案。
 2. 先讀懂我的整個專案，不要先執行或修改，也不要用課堂範例覆蓋我的檔案。
-3. 第一題只問我：「你是哪個部門？」回答只用來確認，真正權限仍以 Windows 身分與資料庫授權為準。
-4. 依 docs/connection-flow.md 檢查連線環境。不要問我主機、帳號、密碼或 connection string，也不要顯示環境變數的實際值。
+3. 第一題只問我：「你是哪個部門？」回答只用來確認，真正權限仍以個人 SQL Login 與資料庫授權為準。
+4. 依 docs/connection-flow.md 確認 `%LOCALAPPDATA%\Medtecs\DbAccess\Invoke-WithDbAccess.ps1` 已安裝。不要直接讀取或解密 `credential.bin`，不要問我主機、帳號、密碼或 connection string。
 5. 用白話告訴我目前資料從畫面到 Google Sheet 的流程。
 6. 比對課堂範例後，列出我的作品中哪些 Sheet、欄位與功能會搬到資料庫，以及哪些既有修改會保留。
 7. 一次問我一個必要的工作規則；能從現有程式確認的就不要再問。
@@ -23,9 +23,9 @@
 
 執行時：
 1. 先保留我的既有作品與可回復的原始版本，建立 Git 修改紀錄。
-2. 只從 WORKSHOP6_SQL_SERVER、WORKSHOP6_SQL_DATABASE、WORKSHOP6_SQL_SCHEMA、WORKSHOP6_SQL_AUTH 取得非秘密連線設定。
-3. 使用 Windows 登入身分連線，不向我索取或顯示帳號密碼。
-4. 在我的 schema 內建立資料表與 migration，不操作其他資料庫或 schema。
+2. 所有需要 DB 連線的命令都透過 `Invoke-WithDbAccess.ps1` 執行；程式只從 helper 提供的 `MEDTECS_DB_*` 子程序環境變數取得連線設定。不得顯示實際值，也不得複製到 `.env`、程式、命令列、Git 或 log。
+3. 使用個人 SQL Login 連線，不向我索取或顯示帳號密碼。
+4. 只在 `MEDTECS_DB_SCHEMA` 指定的個人工號 schema 內建立資料表與 migration，不使用 `dbo`，不操作其他資料庫或 schema。
 5. 先用少量假資料測試，再搬入我的練習資料；搬遷不可製造重複資料。
 6. 訂購時，檢查庫存、扣庫存、新增訂單必須一起成功或一起取消。
 7. 取消訂單要保留紀錄並恢復庫存；清空全部資料前再次問我。

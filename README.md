@@ -33,7 +33,23 @@ Stars 就像收藏或人氣票數，可以看出一個專案受到多少關注�
 
 ## 課堂怎麼開始
 
-先在「你上週完成的作品資料夾」開啟 Claude Code，再把課堂專案網址與下面這段話貼給它。GitHub 專案是 AI 的參考資料，真正要修改的是你自己的作品。
+若這台電腦尚未安裝 DB 連線，請解壓講師提供的個人資料庫 ZIP，雙擊裡面唯一的 `install-db-access.bat`。看到安裝成功即可關閉視窗；已在行前會完成安裝的人不需要重跑。Batch 不會建立桌面捷徑，也不會啟動 Claude Code。
+
+接著照平常方式，在「你上週完成的作品資料夾」開啟 Claude Code，再把課堂專案網址與下面這段話貼給它。GitHub 專案是 AI 的參考資料，真正要修改的是你自己的作品。
+
+### AI 如何找到 DB 連線
+
+安裝完成後，相關檔案固定放在目前 Windows 使用者的：
+
+```text
+%LOCALAPPDATA%\Medtecs\DbAccess
+```
+
+- `config.json`：非秘密連線提示。
+- `credential.bin`：由 Windows DPAPI 保護的個人憑證；AI 只能確認檔案存在，不可直接讀取、解密或複製。
+- `Invoke-WithDbAccess.ps1`：AI 執行 DB 命令時使用的安全 helper。
+
+AI 必須依 `docs/connection-flow.md` 呼叫 helper，讓 DB 設定只存在於需要連線的子程序；不可把帳密寫進 `.env`、程式碼、Git 或 log。
 
 ```text
 請閱讀講師提供的 Workshop 6 GitHub 專案：
@@ -42,6 +58,7 @@ https://github.com/billychu-mectecs/workshop6-sheet-to-db
 我目前開啟的資料夾是上週完成的作品，這才是要修改的目標。請先確認目前位置與主要檔案；若不像一個現有專案，請停止並提醒我選對資料夾。
 
 請把課堂專案下載到另外的暫存參考位置，讀完 README.md、CLAUDE.md 與 prompts/sheet-to-db.md。不要執行課堂範例，不要用範例檔案覆蓋我的作品，也不要改動暫存參考資料。
+先依 docs/connection-flow.md 確認本機 DB helper 已安裝；只回報檔案與設定是否完整，不要顯示任何實際值。
 讀完後，第一題只問我：「你是哪個部門？」我的回答只用來確認，不可拿來決定或擴大資料庫權限。
 先不要執行或修改。先用繁體中文告訴我：
 1. 我的作品位置與課堂參考專案位置
