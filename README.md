@@ -49,7 +49,7 @@ Stars 就像收藏或人氣票數，可以看出一個專案受到多少關注�
 - `credential.bin`：由 Windows DPAPI 保護的個人憑證；AI 只能確認檔案存在，不可直接讀取、解密或複製。
 - `Invoke-WithDbAccess.ps1`：AI 執行 DB 命令時使用的安全 helper。
 
-AI 必須依 `docs/connection-flow.md` 呼叫 helper，讓 DB 設定只存在於需要連線的子程序；不可把帳密寫進 `.env`、程式碼、Git 或 log。
+DB access 是一次安裝的資料庫連線；`Invoke-WithDbAccess.ps1` 就是 Claude 實際使用的 DB helper。AI 必須依 `docs/connection-flow.md` 呼叫 helper，讓 DB 設定只存在於需要連線的子程序；不可把帳密寫進 `.env`、程式碼、Git 或 log。
 
 ```text
 請閱讀講師提供的 Workshop 6 GitHub 專案：
@@ -59,7 +59,7 @@ https://github.com/billychu-mectecs/workshop6-sheet-to-db
 
 請把課堂專案下載到另外的暫存參考位置，讀完 README.md、CLAUDE.md 與 prompts/sheet-to-db.md。不要執行課堂範例，不要用範例檔案覆蓋我的作品，也不要改動暫存參考資料。
 先依 docs/connection-flow.md 確認本機 DB helper 已安裝；只回報檔案與設定是否完整，不要顯示任何實際值。
-讀完後，第一題只問我：「你是哪個部門？」我的回答只用來確認，不可拿來決定或擴大資料庫權限。
+不要詢問我的部門、工號、主機、帳號、密碼或連線字串。資料庫範圍只以 DB helper 提供的個人 SQL Login、MEDTECS_DB_DATABASE 與 MEDTECS_DB_SCHEMA 為準；資料不完整、範圍不明或權限不符時，請停止並請講師協助。
 先不要執行或修改。先用繁體中文告訴我：
 1. 我的作品位置與課堂參考專案位置
 2. 我的作品目前資料怎麼流動
