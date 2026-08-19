@@ -12,7 +12,9 @@
 2. 建立一個不輸出設定值的連線檢查程式，再透過 helper 執行：
 
    ```powershell
-   & "$env:LOCALAPPDATA\Medtecs\DbAccess\Invoke-WithDbAccess.ps1" -FilePath uv run python <連線檢查程式>
+   & "$env:LOCALAPPDATA\Medtecs\DbAccess\Invoke-WithDbAccess.ps1" `
+     -FilePath "uv" `
+     -ArgumentList @("run", "python", "<連線檢查程式>")
    ```
 
    實際執行時使用學員作品內的檔案路徑，不把密碼放在命令列。
