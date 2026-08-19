@@ -6,7 +6,7 @@ Git 存檔點完成後，再貼這一段：
 請閱讀講師指定的 Workshop 6 GitHub 專案：
 https://github.com/billychu-mectecs/workshop6-sheet-to-db
 
-我目前開啟的資料夾是上週完成的作品，這才是修改目標。請把講師的 GitHub 專案下載到另一個暫存參考位置，讀完 README.md、CLAUDE.md、docs/connection-flow.md 與 prompts/04-migrate-and-verify.md。
+我目前開啟的資料夾是上週完成的作品，這才是修改目標。請把講師的 GitHub 專案（Repo）下載到另一個暫存參考資料夾，讀完 README.md、CLAUDE.md、docs/connection-flow.md 與 prompts/04-migrate-and-verify.md。這些是給 AI 看的規則，我不需要自己打開。
 
 不要執行講師範例、不要用範例覆蓋我的作品，也不要修改暫存參考資料。先請 AI 檢查這個專案是否有可疑下載、外傳資料或索取帳密的行為。
 
@@ -17,8 +17,8 @@ https://github.com/billychu-mectecs/workshop6-sheet-to-db
 2. 我的作品目前怎麼讀寫 Google Sheet。
 3. 哪些資料會持續累積、需要多人使用，因此準備搬到資料庫。
 4. 哪些既有畫面、文字與功能會保留。
-5. 搬移前需要確認的欄位、必填、重複與工作規則。
+5. 搬移前需要確認的內容，至少包含飲料名稱、庫存數量、訂購人、同一筆訂單是否重複，以及庫存不足與取消訂單時該怎麼處理。
 6. 會如何少量測試，以及完成後如何驗證。
 
-一次只問我一個必要問題。提出完整計畫後停下來，等我回答「可以」再進下一段。
+一次只問我一個必要問題。最後請用勾選清單讓我確認「資料有沒有漏、庫存規則對不對、取消後會不會恢復、重跑會不會重複」。提出完整計畫後停下來，等我回答「可以」再進下一段。
 ```

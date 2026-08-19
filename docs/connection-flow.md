@@ -40,6 +40,6 @@
 
 只告訴學員：
 
-> 這台電腦尚未完成 DB 連線安裝。請執行個人 install-db-access.bat，完成後再回到目前的 Claude Code 繼續。
+> 這台電腦尚未完成資料庫連線安裝。請使用講師寄送的最新個人安裝包，執行 Setup-Claude.bat；看到 Setup complete 後，再回到目前的 Claude Code 繼續。
 
 不要請學員自行填值，也不要把秘密寫進 `.env` 或程式碼。
