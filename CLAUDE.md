@@ -18,6 +18,14 @@
 - 不要求學員輸入 SQL、帳號、密碼、連線字串或內部位址。
 - 先用「目前狀況、準備怎麼改、完成怎麼確認」說明計畫，取得確認後才修改。
 - 每完成一小段，就用學員看得懂的操作方式驗證。
+- 四段任務必須分開執行；每段完成後停下來回報，取得學員確認才可進入下一段。
+
+## 四段任務邊界
+
+1. `prompts/01-restore-project.md`：只讓既有作品正常開啟，不改功能、不改資料來源、不部署。
+2. `prompts/02-git-checkpoint.md`：只建立安全的本機 Git 存檔點，不碰資料庫、不建立或上傳公開 GitHub。
+3. `prompts/03-plan-sheet-to-db.md`：只讀取、檢查與提出計畫，不修改學員作品與資料庫。
+4. `prompts/04-migrate-and-verify.md`：先少量測試並停下確認，再完整搬移、驗證、比較 Git 前後差異。
 
 ## 安全規則
 
@@ -65,4 +73,4 @@
 - 未經學員明確確認，不建立公開 Repo、不 push，也不覆蓋既有遠端內容。
 - 完成時用白話列出：改了什麼、測了什麼、還有什麼需要講師協助。
 
-詳細任務依 `prompts/sheet-to-db.md` 執行。
+詳細任務依 `prompts/01-restore-project.md` 到 `prompts/04-migrate-and-verify.md` 的順序執行；`prompts/sheet-to-db.md` 只保留為導覽頁。
